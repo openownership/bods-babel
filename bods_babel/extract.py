@@ -1,8 +1,8 @@
-from bods_babel import TRANSLATABLE_CODELIST_HEADERS, TRANSLATABLE_SCHEMA_KEYWORDS, text_to_translate
+import csv
+import json
+from io import StringIO
 
-def clean_text(text):
-    if isinstance(text, str):
-        return text.strip()
+from bods_babel import TRANSLATABLE_CODELIST_HEADERS, TRANSLATABLE_SCHEMA_KEYWORDS, text_to_translate  # noqa
 
 
 def extract_codelist(fileobj, keywords, comment_tags, options):
@@ -18,7 +18,8 @@ def extract_codelist(fileobj, keywords, comment_tags, options):
 
     for lineno, row in enumerate(reader, 1):
         for key, value in row.items():
-            text = text_to_translate(value, key in TRANSLATABLE_CODELIST_HEADERS)
+            text = text_to_translate(
+                value, key in TRANSLATABLE_CODELIST_HEADERS)
             if text:
                 yield lineno, '', text, [key]
 
@@ -33,7 +34,9 @@ def extract_schema(fileobj, keywords, comment_tags, options):
                 yield from _extract_schema(item, pointer='{}/{}'.format(pointer, index))
         elif isinstance(data, dict):
             for key, value in data.items():
-                text = text_to_translate(value, key in TRANSLATABLE_SCHEMA_KEYWORDS)
+                yield from _extract_schema(value, pointer='{}/{}'.format(pointer, key))
+                text = text_to_translate(
+                    value, key in TRANSLATABLE_SCHEMA_KEYWORDS)
                 if text:
                     yield text, '{}/{}'.format(pointer, key)
 

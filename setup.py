@@ -8,7 +8,6 @@ setup(
     description='Babel extractors for the Beneficial Ownership Data Standard schema and related components.',
     license='BSD',
     packages=find_packages(),
-    long_description=long_description,
     install_requires=[],
     extras_require={
         'test': [
