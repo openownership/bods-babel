@@ -1,6 +1,4 @@
 import os
-import csv
-import json
 from tempfile import TemporaryDirectory
 
 from bods_babel.extract import extract_codelist, extract_schema
