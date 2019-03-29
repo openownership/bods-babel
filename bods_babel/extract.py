@@ -31,10 +31,12 @@ def extract_schema(fileobj, keywords, comment_tags, options):
     def _extract_schema(data, pointer=''):
         if isinstance(data, list):
             for index, item in enumerate(data):
-                yield from _extract_schema(item, pointer='{}/{}'.format(pointer, index))
+                yield from _extract_schema(
+                    item, pointer='{}/{}'.format(pointer, index))
         elif isinstance(data, dict):
             for key, value in data.items():
-                yield from _extract_schema(value, pointer='{}/{}'.format(pointer, key))
+                yield from _extract_schema(
+                    value, pointer='{}/{}'.format(pointer, key))
                 text = text_to_translate(
                     value, key in TRANSLATABLE_SCHEMA_KEYWORDS)
                 if text:
