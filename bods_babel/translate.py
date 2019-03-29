@@ -1,12 +1,16 @@
 import csv
 import gettext
 import json
+import logging
 import os
 from collections import OrderedDict
 from copy import deepcopy
 from io import StringIO
 
-from bods_babel import TRANSLATABLE_CODELIST_HEADERS, TRANSLATABLE_SCHEMA_KEYWORDS, text_to_translate
+from bods_babel import TRANSLATABLE_CODELIST_HEADERS, TRANSLATABLE_SCHEMA_KEYWORDS, text_to_translate  # noqa
+
+
+logger = logging.getLogger('bods_babel')
 
 
 def translate(configuration, localedir, language, **kwargs):
@@ -46,7 +50,8 @@ def translate_codelist(io, translator, **kwargs):
     """
     reader = csv.DictReader(io)
 
-    fieldnames = [translator.gettext(fieldname) for fieldname in reader.fieldnames]
+    fieldnames = [translator.gettext(fieldname)
+                  for fieldname in reader.fieldnames]
     rows = translate_codelist_data(reader, translator, **kwargs)
 
     io = StringIO()
@@ -65,7 +70,8 @@ def translate_codelist_data(source, translator, **kwargs):
     for row in source:
         data = {}
         for key, value in row.items():
-            text = text_to_translate(value, key in TRANSLATABLE_CODELIST_HEADERS)
+            text = text_to_translate(
+                value, key in TRANSLATABLE_CODELIST_HEADERS)
             if text:
                 value = translator.gettext(text)
             data[translator.gettext(key)] = value
@@ -96,7 +102,8 @@ def translate_schema_data(source, translator, **kwargs):
         elif isinstance(data, dict):
             for key, value in data.items():
                 _translate_schema_data(value)
-                text = text_to_translate(value, key in TRANSLATABLE_SCHEMA_KEYWORDS)
+                text = text_to_translate(
+                    value, key in TRANSLATABLE_SCHEMA_KEYWORDS)
                 if text:
                     data[key] = translator.gettext(text)
                     for old, new in kwargs.items():
