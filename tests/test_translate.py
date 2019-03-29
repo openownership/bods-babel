@@ -6,6 +6,7 @@ import logging
 from glob import glob
 from tempfile import TemporaryDirectory
 
+
 from bods_babel.translate import translate
 
 codelist = """code,title,description,technical note
@@ -202,3 +203,4 @@ def test_translate_schema(monkeypatch, caplog):
     assert caplog.records[0].levelname == 'INFO'
     assert caplog.records[0].message == 'Translating to fake_ru using "schema" domain, into {}'.format(  # noqa
         builddir)
+
